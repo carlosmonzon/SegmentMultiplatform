@@ -12,5 +12,5 @@ pluginManagement {
         }
     }
 }
-rootProject.name = "SegmentMultifplatform"
+rootProject.name = "SegmentMultiplatform"
 

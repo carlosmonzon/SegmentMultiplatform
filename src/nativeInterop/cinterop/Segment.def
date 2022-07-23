@@ -1,0 +1,5 @@
+language = Objective-C
+modules = Segment
+package = Segment
+compilerOpts = -framework Segment
+linkerOpts = -framework Segment

@@ -1,10 +1,15 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 import org.jetbrains.kotlin.konan.target.KonanTarget
 
 plugins {
     id("com.android.library")
     kotlin("multiplatform") version "1.7.10"
-    id("com.chromaticnoise.multiplatform-swiftpackage") version "2.0.3"
+//    kotlin("native.cocoapods") version "1.7.10"
+
+//    id("com.chromaticnoise.multiplatform-swiftpackage") version "2.0.3"
+    id("io.github.luca992.multiplatform-swiftpackage") version "2.0.5-arm64" // arm64 issue
 }
 
 group = "org.monzon"
@@ -36,6 +41,9 @@ kotlin {
         }
     }
 
+    val frameworkBaseName = "SegmentMultiplatform"
+    val xcf = XCFramework()
+
     fun nativeTargetConfig(): KotlinNativeTarget.() -> Unit = {
         val nativeFrameworkPaths = listOf(
             "Segment"
@@ -43,31 +51,44 @@ kotlin {
             projectDir.resolve("$cInteropSegmentPath/$it.xcframework/${konanTarget.archVariant}")
         }
 
-        binaries {
-            getTest("DEBUG").apply {
-                linkerOpts(nativeFrameworkPaths.map { "-F$it" })
-                linkerOpts("-ObjC")
-            }
-        }
+//        binaries {
+//            getTest("DEBUG").apply {
+//                linkerOpts(nativeFrameworkPaths.map { "-F$it" })
+//                linkerOpts("-ObjC")
+//            }
+//        }
 
         compilations.getByName("main") {
-            cinterops.create("Segment") {
+            val Segment by cinterops.creating {
                 /**
                  * This path can be omitted if your .def file has the same name as cinterop and is placed in the src/nativeInterop/cinterop/ directory.
                  */
                 //defFile("src/nativeInterop/cinterop/Segment.def")
                 compilerOpts(nativeFrameworkPaths.map { "-F$it" })
-                extraOpts = listOf("-compiler-option", "-DNS_FORMAT_ARGUMENT(A)=", "-verbose")
             }
+        }
+
+        binaries.all {
+            linkerOpts(nativeFrameworkPaths.map { "-F$it" })
+            println(this.name)
+            println(nativeFrameworkPaths)
+        }
+
+        binaries.framework {
+            baseName = frameworkBaseName
+            xcf.add(this)
         }
     }
     val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
         System.getenv("SDK_NAME")?.startsWith("iphoneos") == true -> ::iosArm64
         System.getenv("NATIVE_ARCH")?.startsWith("arm") == true -> ::iosSimulatorArm64 // available to KT 1.5.30
-        else -> ::iosX64
+        else -> ::iosSimulatorArm64
     }
 
-    iosTarget("ios", nativeTargetConfig())
+
+//    iosTarget("ios", nativeTargetConfig())
+    ios(configure = nativeTargetConfig())
+    iosSimulatorArm64(configure = nativeTargetConfig())
 
     sourceSets {
         val commonMain by getting
@@ -88,8 +109,17 @@ kotlin {
 
         val jsMain by getting
         val jsTest by getting
+
+
         val iosMain by getting
-        val iosTest by getting
+        val iosSimulatorArm64Main by getting
+        iosSimulatorArm64Main.dependsOn(iosMain)
+
+        val iosTest by sourceSets.getting
+        val iosSimulatorArm64Test by sourceSets.getting
+        iosSimulatorArm64Test.dependsOn(iosTest)
+
+
     }
 
 }

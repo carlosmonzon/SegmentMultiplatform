@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 import org.jetbrains.kotlin.konan.target.KonanTarget
@@ -51,13 +50,6 @@ kotlin {
             projectDir.resolve("$cInteropSegmentPath/$it.xcframework/${konanTarget.archVariant}")
         }
 
-//        binaries {
-//            getTest("DEBUG").apply {
-//                linkerOpts(nativeFrameworkPaths.map { "-F$it" })
-//                linkerOpts("-ObjC")
-//            }
-//        }
-
         compilations.getByName("main") {
             val Segment by cinterops.creating {
                 /**
@@ -68,17 +60,19 @@ kotlin {
             }
         }
 
-        binaries.all {
-            linkerOpts(nativeFrameworkPaths.map { "-F$it" })
-            println(this.name)
-            println(nativeFrameworkPaths)
-        }
-
-        binaries.framework {
-            baseName = frameworkBaseName
-            xcf.add(this)
+        binaries {
+            framework {
+                baseName = frameworkBaseName
+                isStatic = true // needed when Segment is consumed via SPM in the iOS app
+                xcf.add(this)
+            }
+            getTest("DEBUG").apply {
+                linkerOpts(nativeFrameworkPaths.map { "-F$it" })
+                linkerOpts("-ObjC")
+            }
         }
     }
+
     val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
         System.getenv("SDK_NAME")?.startsWith("iphoneos") == true -> ::iosArm64
         System.getenv("NATIVE_ARCH")?.startsWith("arm") == true -> ::iosSimulatorArm64 // available to KT 1.5.30
@@ -101,7 +95,7 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 //TODO: move to Dependencies.kt
-                implementation( "com.segment.analytics.kotlin:android:1.7.0")
+                implementation("com.segment.analytics.kotlin:android:1.7.0")
             }
         }
 

@@ -4,8 +4,6 @@ import com.monzon.analytics.domain.Event
 
 interface IAnalytics {
 
-    companion object
-
     /**
      * A factory that can produce [IAnalytics] instances.
      */

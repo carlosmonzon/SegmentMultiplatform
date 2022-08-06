@@ -5,6 +5,10 @@ import Segment.SEGAnalyticsConfiguration
 
 class AnalyticsImpl(val ios: SEGAnalytics) : IAnalytics {
 
+    companion object {
+        fun shared() = AnalyticsImpl(SEGAnalytics.sharedAnalytics())
+    }
+
     class Factory : IAnalytics.Factory {
         override fun create(configuration: Configuration): IAnalytics {
             val analyticsConfig = SEGAnalyticsConfiguration.configurationWithWriteKey(configuration.writeKey)

@@ -3,17 +3,17 @@ package com.monzon.analytics
 import Segment.SEGAnalytics
 import Segment.SEGAnalyticsConfiguration
 
-class AnalyticsImpl(val ios: SEGAnalytics) : IAnalytics {
+class SegmentWrapperImpl(val ios: SEGAnalytics) : SegmentWrapper {
 
     companion object {
-        fun shared() = AnalyticsImpl(SEGAnalytics.sharedAnalytics())
+        fun shared() = SegmentWrapperImpl(SEGAnalytics.sharedAnalytics())
     }
 
-    class Factory : IAnalytics.Factory {
-        override fun create(configuration: Configuration): IAnalytics {
+    class Factory : SegmentWrapper.Factory {
+        override fun create(configuration: Configuration): SegmentWrapper {
             val analyticsConfig = SEGAnalyticsConfiguration.configurationWithWriteKey(configuration.writeKey)
             SEGAnalytics.setupWithConfiguration(analyticsConfig)
-            return AnalyticsImpl(SEGAnalytics.sharedAnalytics())
+            return SegmentWrapperImpl(SEGAnalytics.sharedAnalytics())
         }
 
     }

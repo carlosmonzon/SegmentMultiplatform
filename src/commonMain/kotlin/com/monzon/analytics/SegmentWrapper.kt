@@ -1,17 +1,15 @@
 package com.monzon.analytics
 
-import com.monzon.analytics.domain.Event
-
-interface IAnalytics {
+interface SegmentWrapper {
 
     /**
-     * A factory that can produce [IAnalytics] instances.
+     * A factory that can produce [SegmentWrapper] instances.
      */
     interface Factory {
         /**
-         * Creates a [IAnalytics] object associated with the provided [Configuration].
+         * Creates a [SegmentWrapper] object associated with the provided [Configuration].
          */
-        fun create(configuration: Configuration): IAnalytics
+        fun create(configuration: Configuration): SegmentWrapper
     }
 
     fun track(name: String, properties: Map<Any?, *>? = null, options: Map<Any?, *>? = null)

@@ -1,6 +1,6 @@
 package com.monzon.analytics
 
-class Analytics : IAnalytics {
+class SegmentWrapperImpl : SegmentWrapper {
     override fun track(name: String, properties: Map<Any?, *>?, options: Map<Any?, *>?) {
         TODO("Not yet implemented")
     }

@@ -1,5 +1,10 @@
 object Versions {
+    const val kotlinVersion = "1.7.20-Beta"
     const val androidMinSdk = 21
     const val androidCompileSdk = 32
     const val androidTargetSdk = androidCompileSdk
+
+    object Common {
+        const val kotlinSerialization = "1.4.0-RC"
+    }
 }

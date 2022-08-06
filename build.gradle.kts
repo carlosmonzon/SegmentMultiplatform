@@ -4,7 +4,8 @@ import org.jetbrains.kotlin.konan.target.KonanTarget
 
 plugins {
     id("com.android.library")
-    kotlin("multiplatform") version "1.7.10"
+    kotlin("multiplatform") version Versions.kotlinVersion
+    kotlin("plugin.serialization") version Versions.kotlinVersion
 //    kotlin("native.cocoapods") version "1.7.10"
 
 //    id("com.chromaticnoise.multiplatform-swiftpackage") version "2.0.3"
@@ -56,7 +57,10 @@ kotlin {
                  * This path can be omitted if your .def file has the same name as cinterop and is placed in the src/nativeInterop/cinterop/ directory.
                  */
                 //defFile("src/nativeInterop/cinterop/Segment.def")
-                compilerOpts(nativeFrameworkPaths.map { "-F$it" })
+                nativeFrameworkPaths.map {
+                    compilerOpts("-F$it")
+                    linkerOpts("-rpath", "$it")
+                }
             }
         }
 
@@ -67,7 +71,10 @@ kotlin {
                 xcf.add(this)
             }
             getTest("DEBUG").apply {
-                linkerOpts(nativeFrameworkPaths.map { "-F$it" })
+                nativeFrameworkPaths.map {
+                    linkerOpts("-F$it")
+                    linkerOpts("-rpath", "$it")
+                }
                 linkerOpts("-ObjC")
             }
         }

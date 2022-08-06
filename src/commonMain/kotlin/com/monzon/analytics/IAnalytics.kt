@@ -1,10 +1,19 @@
 package com.monzon.analytics
 
-expect class Analytics {
+import com.monzon.analytics.domain.Event
 
-    companion object {
-        fun setupWithConfiguration(configuration: Configuration): Analytics
-        fun shared(context: Any? = null): Analytics
+interface IAnalytics {
+
+    companion object
+
+    /**
+     * A factory that can produce [IAnalytics] instances.
+     */
+    interface Factory {
+        /**
+         * Creates a [IAnalytics] object associated with the provided [Configuration].
+         */
+        fun create(configuration: Configuration): IAnalytics
     }
 
     fun track(name: String, properties: Map<Any?, *>? = null, options: Map<Any?, *>? = null)

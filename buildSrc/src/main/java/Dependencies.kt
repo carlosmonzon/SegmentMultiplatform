@@ -7,4 +7,9 @@ object Versions {
     object Common {
         const val kotlinSerialization = "1.4.0-RC"
     }
+
+    object Android {
+        const val segment = "4.10.4"
+        const val androidxStartup = "1.1.1"
+    }
 }

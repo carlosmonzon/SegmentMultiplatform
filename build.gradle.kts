@@ -101,8 +101,9 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-                //TODO: move to Dependencies.kt
-                implementation("com.segment.analytics.kotlin:android:1.7.0")
+                implementation("androidx.startup:startup-runtime:${Versions.Android.androidxStartup}")
+                // improvement: segment kotlin version is available
+                implementation("com.segment.analytics.android:analytics:${Versions.Android.segment}")
             }
         }
 

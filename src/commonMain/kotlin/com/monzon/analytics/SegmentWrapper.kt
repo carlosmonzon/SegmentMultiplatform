@@ -1,6 +1,6 @@
 package com.monzon.analytics
 
-interface SegmentWrapper {
+internal interface SegmentWrapper {
 
     /**
      * A factory that can produce [SegmentWrapper] instances.
@@ -9,7 +9,7 @@ interface SegmentWrapper {
         /**
          * Creates a [SegmentWrapper] object associated with the provided [Configuration].
          */
-        fun create(configuration: Configuration): SegmentWrapper
+        fun create(configuration: Configuration, context: Any? = null): SegmentWrapper
     }
 
     fun track(name: String, properties: Map<Any?, *>? = null, options: Map<Any?, *>? = null)

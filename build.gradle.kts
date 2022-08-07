@@ -6,6 +6,7 @@ plugins {
     id("com.android.library")
     kotlin("multiplatform") version Versions.kotlinVersion
     kotlin("plugin.serialization") version Versions.kotlinVersion
+    `maven-publish`
 //    kotlin("native.cocoapods") version "1.7.10"
 
 //    id("com.chromaticnoise.multiplatform-swiftpackage") version "2.0.3"
@@ -32,7 +33,9 @@ val KonanTarget.archVariant: String
     }
 
 kotlin {
-    android()
+    android {
+        publishLibraryVariants("release", "debug")
+    }
     js(BOTH) {
         browser {
             commonWebpackConfig {

@@ -1,6 +1,6 @@
 package com.monzon.analytics
 
-internal interface SegmentWrapper {
+interface SegmentWrapper {
 
     /**
      * A factory that can produce [SegmentWrapper] instances.

@@ -1,14 +1,14 @@
 package com.monzon.analytics
 
-import com.monzon.analytics.domain.Event
+import com.monzon.analytics.lib.Event
 
 interface Analytics {
 
     fun track(event: Event)
+
 }
 
-class AnalyticsImpl constructor(private val segmentWrapper: SegmentWrapper) : Analytics,
-    SegmentWrapper by segmentWrapper {
+class AnalyticsImpl constructor(private val segmentWrapper: SegmentWrapper) : Analytics {
     companion object {
         fun shared(analytics: SegmentWrapper) = AnalyticsImpl(analytics)
     }

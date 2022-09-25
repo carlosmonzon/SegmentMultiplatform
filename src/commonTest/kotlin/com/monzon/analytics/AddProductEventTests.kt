@@ -13,8 +13,10 @@ class AddProductEventTests {
         val event = AddProductEvent(product = product)
         val map = event.toMap()
         val expectedMap: Map<Any?, *> =
-            mapOf("name" to "Add Product", "product" to mapOf("skuId" to "1", "price" to 10.0))
+            mapOf("product" to mapOf("skuId" to "1", "price" to 10.0))
         assertEquals(expectedMap, map)
+
+        assertEquals(event.name, "Product Added")
     }
 
 }

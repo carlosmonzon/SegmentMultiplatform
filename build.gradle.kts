@@ -1,16 +1,26 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 import org.jetbrains.kotlin.konan.target.KonanTarget
 
 plugins {
     id("com.android.library")
     kotlin("multiplatform") version Versions.kotlinVersion
     kotlin("plugin.serialization") version Versions.kotlinVersion
+    id("co.touchlab.faktory.kmmbridge") version "0.3.1"
     `maven-publish`
-//    kotlin("native.cocoapods") version "1.7.10"
+}
 
-//    id("com.chromaticnoise.multiplatform-swiftpackage") version "2.0.3"
-    id("io.github.luca992.multiplatform-swiftpackage") version "2.0.5-arm64" // arm64 issue
+
+
+kmmbridge {
+//  is mandatory for this flow. Without that, files will not be published anywhere
+//  (there are other publishing options available).
+    githubReleaseArtifacts("release-")
+
+//  Similar to GitTagVersionManager, but calls the GitHub api to create a Git release.
+//  Only usable with GitHub, but preferred to GitTagVersionManager if you are using GitHub.
+    githubReleaseVersions()
+    spm(project.rootDir.path) // issue if not clearing a path: path may not be null or empty string. path=''
+    versionPrefix.set("0.0")
 }
 
 group = "org.monzon"
@@ -45,7 +55,6 @@ kotlin {
     }
 
     val frameworkBaseName = "SegmentMultiplatform"
-    val xcf = XCFramework()
 
     fun nativeTargetConfig(): KotlinNativeTarget.() -> Unit = {
         val nativeFrameworkPaths = listOf(
@@ -71,7 +80,6 @@ kotlin {
             framework {
                 baseName = frameworkBaseName
                 isStatic = true // needed when Segment is consumed via SPM in the iOS app
-                xcf.add(this)
             }
             getTest("DEBUG").apply {
                 nativeFrameworkPaths.map {
@@ -143,11 +151,4 @@ android {
     }
 
     namespace = "com.monzon.analytics"
-}
-multiplatformSwiftPackage {
-    packageName("MultiplatformAnalytics")
-    swiftToolsVersion("5.3")
-    targetPlatforms {
-        iOS { v("13") }
-    }
 }

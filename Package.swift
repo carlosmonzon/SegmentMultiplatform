@@ -1,8 +1,8 @@
 // swift-tools-version:5.3
 import PackageDescription
 
-let remoteKotlinUrl = "https://api.github.com/repos/carlosmonzon/SegmentMultiplatform/releases/assets/81944842.zip"
-let remoteKotlinChecksum = "e16bf6ac912a53a4a2582cdb8df7c9070ce3b0589b6213ab322fb3f9be46711e"
+let remoteKotlinUrl = "https://api.github.com/repos/carlosmonzon/SegmentMultiplatform/releases/assets/81945643.zip"
+let remoteKotlinChecksum = "df2de5eb2611ce107af071524b8b39897811dcbc470a42d830b480aa2a05b951"
 let packageName = "SegmentMultiplatform"
 
 let package = Package(

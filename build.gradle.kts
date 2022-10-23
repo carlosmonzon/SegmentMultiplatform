@@ -12,15 +12,10 @@ plugins {
 
 
 kmmbridge {
-//  is mandatory for this flow. Without that, files will not be published anywhere
-//  (there are other publishing options available).
-    githubReleaseArtifacts("release-")
-
-//  Similar to GitTagVersionManager, but calls the GitHub api to create a Git release.
-//  Only usable with GitHub, but preferred to GitTagVersionManager if you are using GitHub.
+    githubReleaseArtifacts()
     githubReleaseVersions()
-    spm(project.rootDir.path) // issue if not clearing a path: path may not be null or empty string. path=''
-    versionPrefix.set("0.0")
+    spm(project.rootDir.path)
+    versionPrefix.set("0.1")
 }
 
 group = "org.monzon"

@@ -1,6 +1,8 @@
 // swift-tools-version:5.3
 import PackageDescription
 
+let remoteKotlinUrl = "https://api.github.com/repos/carlosmonzon/SegmentMultiplatform/releases/assets/81944359.zip"
+let remoteKotlinChecksum = "e16bf6ac912a53a4a2582cdb8df7c9070ce3b0589b6213ab322fb3f9be46711e"
 let packageName = "SegmentMultiplatform"
 
 let package = Package(
@@ -17,7 +19,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: packageName,
-            path: "./build/XCFrameworks/debug/\(packageName).xcframework"
+            url: remoteKotlinUrl,
+            checksum: remoteKotlinChecksum
         )
         ,
     ]

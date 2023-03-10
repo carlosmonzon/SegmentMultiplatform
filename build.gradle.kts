@@ -46,10 +46,9 @@ kotlin {
     android {
         publishLibraryVariants("release", "debug")
     }
-    js(BOTH) {
+    js(IR) {
         browser {
             commonWebpackConfig {
-                cssSupport.enabled = true
             }
         }
     }

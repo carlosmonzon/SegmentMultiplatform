@@ -64,12 +64,12 @@ class Visitor(private val codeGenerator: CodeGenerator, private val logger: KSPL
 
 
         val hashMap = ClassName("kotlin.collections", "HashMap")
-        val hashMapOfAny = hashMap.parameterizedBy(ANY, ANY)
+        val hashMapOfAny = hashMap.parameterizedBy(ANY, ANY.copy(nullable = true))
 
         val extensionBuilder = FunSpec.builder("toMap")
             .receiver(classDeclaration.toClassName())
             .returns(hashMapOfAny)
-            .beginControlFlow("val map = HashMap<Any, Any>().apply")
+            .beginControlFlow("val map = HashMap<Any, Any?>().apply")
 
         val properties = classDeclaration.getAllProperties()
         properties.forEach { property ->

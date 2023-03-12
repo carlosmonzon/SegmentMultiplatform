@@ -14,4 +14,5 @@ pluginManagement {
     }
 }
 rootProject.name = "SegmentMultiplatform"
-
+include("processor")
+include("annotation")

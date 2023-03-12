@@ -5,6 +5,7 @@ plugins {
     id("com.android.library")
     kotlin("multiplatform") version Versions.kotlinVersion
     kotlin("plugin.serialization") version Versions.kotlinVersion
+    id("com.google.devtools.ksp") version Versions.KSP.ksp
     id("co.touchlab.faktory.kmmbridge") version "0.3.1"
     `maven-publish`
 }
@@ -45,12 +46,6 @@ val KonanTarget.archVariant: String
 kotlin {
     android {
         publishLibraryVariants("release", "debug")
-    }
-    js(IR) {
-        browser {
-            commonWebpackConfig {
-            }
-        }
     }
 
     val frameworkBaseName = "SegmentMultiplatform"
@@ -102,7 +97,13 @@ kotlin {
     iosSimulatorArm64(configure = nativeTargetConfig())
 
     sourceSets {
-        val commonMain by getting
+        val commonMain by getting {
+            dependencies {
+                implementation(project(":annotation"))
+            }
+            // generated code by PropertyProcessor
+            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
+        }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
@@ -118,10 +119,6 @@ kotlin {
         }
 
         val androidTest by getting
-
-        val jsMain by getting
-        val jsTest by getting
-
 
         val iosMain by getting
         val iosSimulatorArm64Main by getting
@@ -150,4 +147,18 @@ android {
     }
 
     namespace = "com.monzon.analytics"
+}
+
+
+//https://slack-chats.kotlinlang.org/t/5117962/hi-all-is-it-possible-to-setup-ksp-to-generate-classes-only-
+// generated ksp code to "build/generated/ksp/metadata/commonMain/kotlin" at compile time
+tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().all {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+}
+
+dependencies {
+    implementation(project(":annotation"))
+    add("kspCommonMainMetadata", project(":processor"))
 }

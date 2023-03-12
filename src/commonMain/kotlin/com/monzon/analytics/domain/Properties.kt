@@ -1,9 +1,9 @@
 package com.monzon.analytics.domain
 
-import com.monzon.analytics.lib.Mappable
+import org.monzon.annotation.Property
 
-data class ProductProperty(val skuId: String, val price: Double) : Mappable {
-    override fun toMap(): Map<Any?, *>? {
-        return mapOf("skuId" to skuId, "price" to price)
-    }
-}
+@Property
+data class ProductProperty(val skuId: String, val denomination: Denomination)
+
+@Property
+data class Denomination(val id: String, val value: Double)

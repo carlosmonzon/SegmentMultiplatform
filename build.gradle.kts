@@ -85,15 +85,8 @@ kotlin {
         }
     }
 
-    val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
-        System.getenv("SDK_NAME")?.startsWith("iphoneos") == true -> ::iosArm64
-        System.getenv("NATIVE_ARCH")?.startsWith("arm") == true -> ::iosSimulatorArm64 // available to KT 1.5.30
-        else -> ::iosSimulatorArm64
-    }
-
-
-//    iosTarget("ios", nativeTargetConfig())
     ios(configure = nativeTargetConfig())
+    // Add the ARM64 simulator target
     iosSimulatorArm64(configure = nativeTargetConfig())
 
     sourceSets {
@@ -120,17 +113,23 @@ kotlin {
 
         val androidTest by getting
 
-        val iosMain by getting
+        val iosX64Main by getting
+        val iosArm64Main by getting
         val iosSimulatorArm64Main by getting
-        iosSimulatorArm64Main.dependsOn(iosMain)
-
-        val iosTest by sourceSets.getting
-        val iosSimulatorArm64Test by sourceSets.getting
-        iosSimulatorArm64Test.dependsOn(iosTest)
-
-
+        val iosMain by getting {
+            iosX64Main.dependsOn(this)
+            iosArm64Main.dependsOn(this)
+            iosSimulatorArm64Main.dependsOn(this)
+        }
+        val iosX64Test by getting
+        val iosArm64Test by getting
+        val iosSimulatorArm64Test by getting
+        val iosTest by getting {
+            iosX64Test.dependsOn(this)
+            iosArm64Test.dependsOn(this)
+            iosSimulatorArm64Test.dependsOn(this)
+        }
     }
-
 }
 
 android {
